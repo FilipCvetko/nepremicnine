@@ -1,12 +1,12 @@
 # This script will scrape the entire nepremicnine.net rental apartments for Ljubljana city.
 
 from bs4 import BeautifulSoup
-from urllib.request import Request, urlopen
 from lxml import html
 import requests
-import time
+import csv
+import sys
 
-base_URL = "https://www.nepremicnine.net/oglasi-oddaja/ljubljana-mesto/stanovanje/"
+base_URL = sys.argv[1]
 
 def check_total_pages(base_url):
     r = requests.get(base_url)
@@ -16,6 +16,13 @@ def check_total_pages(base_url):
 
 def check_all_pages(base_url):
     num_pages = check_total_pages(base_url)
+    num_of_items = 0
+
+    csv_first_line = ["title","offer_type","desc","size","price"]
+
+    with open("generated_file.csv", "w") as file:
+        writer = csv.writer(file, delimiter="|")
+        writer.writerow(csv_first_line)
 
     for page in range(num_pages):
         current_page_number = page + 1
@@ -28,16 +35,15 @@ def check_all_pages(base_url):
         for offer in offers:
 
             title = offer.xpath("div/h2/a/span/text()")[0]
-            link = f'{"base_url"}{offer.xpath("div/h2/a/attribute::href")[0]}'
             offer_type = offer.xpath('div/div/span/span[@class="tipi"]/text()')[0]
             desc = offer.xpath('div/div/div[@class="kratek_container"]/div/text()')[0]
             size = offer.xpath('div/div/div[@class="main-data"]/span[@class="velikost"]/text()')[0]
             price = offer.xpath('div/div/div[@class="main-data"]/span[@class="cena"]/text()')[0]
 
-            csv_formatted_line_string = str(title) + "," + str(offer_type) + "," + str(desc) + "," + str(size) + "," + str(price)
-            csv_first_line = "title,offer type,description,size, price"
+            item_components = [title,offer_type,desc,size,price]
 
-            print(csv_formatted_line_string)
-            time.sleep(2)
-
+            with open("generated_file.csv", "a") as file:
+                writer = csv.writer(file, delimiter="|")
+                writer.writerow(item_components)
+            
 check_all_pages(base_URL)
