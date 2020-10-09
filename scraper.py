@@ -5,6 +5,7 @@ import requests
 import csv
 import ujson
 import re
+import pandas as pd
 
 class Scraper:
 
@@ -37,9 +38,12 @@ class Scraper:
 
         csv_first_line = ["title","offer_type","desc","size","price"]
 
-        with open("generated_file.csv", "w") as file:
-            writer = csv.writer(file, delimiter="|")
-            writer.writerow(csv_first_line)
+        # If this is our first search ever, we must add the columns.
+        df = pd.read_csv("generated_file.csv")
+        if df.empty:
+            with open("generated_file.csv", "w") as file:
+                writer = csv.writer(file, delimiter="|")
+                writer.writerow(csv_first_line)
 
         for page in range(num_pages):
             current_page_number = page + 1
@@ -59,7 +63,7 @@ class Scraper:
                 offer_id = offer.xpath('attribute::id')[0]
 
                 # Uporabimo reg-ex, da najdemo leto gradnje in adaptacije.
-                gradnja = re.search("")
+                
 
                 item_components = [title,offer_type,desc,size,price]
 
