@@ -5,7 +5,8 @@ import requests
 import csv
 import ujson
 import re
-import pandas as pd
+import os
+import numpy as np
 
 class Scraper:
 
@@ -39,8 +40,7 @@ class Scraper:
         csv_first_line = ["title","offer_type","desc","size","price"]
 
         # If this is our first search ever, we must add the columns.
-        df = pd.read_csv("generated_file.csv")
-        if df.empty:
+        if os.stat("generated_file.csv").st_size == 0:
             with open("generated_file.csv", "w") as file:
                 writer = csv.writer(file, delimiter="|")
                 writer.writerow(csv_first_line)
@@ -63,7 +63,21 @@ class Scraper:
                 offer_id = offer.xpath('attribute::id')[0]
 
                 # Uporabimo reg-ex, da najdemo leto gradnje in adaptacije.
-                
+                pattern = r"([0-9]{4})"
+                results = re.findall(pattern, desc)
+                gradnja = np.NaN
+                adaptacija = np.NaN
+
+                # Če dobim eno številko je samo gradnja, če dobim dve,
+                # je gradnja + adaptacija (torej je novejša adaptacija)
+                if len(results) == 0:
+                    continue
+                elif len(results) == 1:
+                    gradnja = results[0]
+                elif len(results) == 2:
+                    gradnja = min(results)
+                    adaptacija = max(results)
+
 
                 item_components = [title,offer_type,desc,size,price]
 
