@@ -37,7 +37,12 @@ class Scraper:
         num_pages = self.check_total_pages()
         num_of_items = 0
 
-        csv_first_line = ["title","offer_type","desc","size","price"]
+        csv_first_line = ["title","offer_type","desc","size","price","gradnja","adaptacija"]
+
+        if not os.path.exists("generated_file.csv"):
+            with open("generated_file.csv", "w") as file:
+                writer = csv.writer(file, delimiter="|")
+                writer.writerow(csv_first_line)
 
         # If this is our first search ever, we must add the columns.
         if os.stat("generated_file.csv").st_size == 0:
@@ -63,23 +68,18 @@ class Scraper:
                 offer_id = offer.xpath('attribute::id')[0]
 
                 # Uporabimo reg-ex, da najdemo leto gradnje in adaptacije.
-                pattern = r"([0-9]{4})"
-                results = re.findall(pattern, desc)
-                gradnja = np.NaN
-                adaptacija = np.NaN
+                ad_pattern = r"adapt[a-zA-Z\.\s]*([0-9]{4})"
+                grad_pattern = r"zgr[a-zA-Z\.\s]*([0-9]{4})"
+                if re.search(ad_pattern, desc):
+                    adaptacija = re.search(ad_pattern, desc)[1]
+                else:
+                    adaptacija = np.NaN
+                if re.search(grad_pattern, desc):
+                    gradnja = re.search(grad_pattern, desc)[1]
+                else:
+                    gradnja = np.NaN
 
-                # Če dobim eno številko je samo gradnja, če dobim dve,
-                # je gradnja + adaptacija (torej je novejša adaptacija)
-                if len(results) == 0:
-                    continue
-                elif len(results) == 1:
-                    gradnja = results[0]
-                elif len(results) == 2:
-                    gradnja = min(results)
-                    adaptacija = max(results)
-
-
-                item_components = [title,offer_type,desc,size,price]
+                item_components = [title,offer_type,desc,size,price,gradnja,adaptacija]
 
                 if self.does_offer_exist(offer_id):
                     continue
@@ -91,6 +91,13 @@ class Scraper:
                     writer.writerow(item_components)
 
                 self._appdata["visited"].append(offer_id)
+
+        # Before we write the appdata file, let's see how many new offer id's we got.
+        new_elements_this_query = len(self._appdata["visited"]) - self._appdata["numElements"]
+        self._appdata["numElements"] = len(self._appdata["visited"])
+
+        print("------------------------------------------------")
+        print(f"This query resulted in {new_elements_this_query} new results.")
 
         # Now we have to write self._appdata, which is stored locally in the script, to the
         # appdata.json in the directory.
