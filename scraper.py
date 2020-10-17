@@ -7,6 +7,9 @@ import ujson
 import re
 import os
 import numpy as np
+import logging
+
+logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
 
 class Scraper:
 
@@ -96,8 +99,7 @@ class Scraper:
         new_elements_this_query = len(self._appdata["visited"]) - self._appdata["numElements"]
         self._appdata["numElements"] = len(self._appdata["visited"])
 
-        print("------------------------------------------------")
-        print(f"This query resulted in {new_elements_this_query} new results.")
+        logging.info(f"This query resulted in {new_elements_this_query} new results.")
 
         # Now we have to write self._appdata, which is stored locally in the script, to the
         # appdata.json in the directory.
