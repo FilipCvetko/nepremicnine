@@ -12,7 +12,7 @@ We utilized the Beautiful Soup library for web scraping. At first glance, we arr
 
 We have taken 5 categories into consideration: location, year of construction and adaption, number of rooms and space. We used a feature cross to combine latitude and longitude. After the preprocessing, we arrive at the correlation matrix.
 
-<img src="https://github.com/Timothy102/nepremicnine/blob/main/Screenshot from 2021-05-15 17-36-27.png" alt="drawing" width="750"/>
+<img src="https://github.com/Timothy102/nepremicnine/blob/master/cor.png" alt="drawing" width="750"/>
 
 
 
