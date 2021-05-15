@@ -1,4 +1,4 @@
-# Using Neural Networks to predict the rental prices in the city of Ljubljana
+# Using Neural Networks to Predict the Rental Prices in the City of Ljubljana
 
 This project is designed to scrape the contents of the slovenia's most popular website for real-estates,
 process the data and design an ML model to predict the prices based on the characteristics of apartments
