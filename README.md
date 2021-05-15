@@ -10,7 +10,10 @@ We utilized the Beautiful Soup library for web scraping. At first glance, we arr
 
 ## Data Preprocessing
 
-We have taken 5 categories into consideration: location, year of construction and adaption, number of rooms and space. We used a feature cross to combine latitude and longitude. Check out this nice plot done by DataPane. 
+We have taken 5 categories into consideration: location, year of construction and adaption, number of rooms and space. We used a feature cross to combine latitude and longitude. After the preprocessing, we arrive at the correlation matrix.
+
+<img src="https://github.com/Timothy102/autoencoder/blob/main/images/12.png" alt="drawing" width="750"/>
+
 
 
 ## Contact
