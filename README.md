@@ -14,7 +14,7 @@ We have taken 5 categories into consideration: location, year of construction an
 
 <img src="https://github.com/Timothy102/nepremicnine/blob/master/cor.png" alt="drawing" width="750"/>
 
-{% embed url="https://datapane.com/u/timothy102/reports/ljubljana/embed/" %}
+{% embed url="https://datapane.com/u/timothy102/reports/ljubljana/" %}
 
 
 ## Model architecture
